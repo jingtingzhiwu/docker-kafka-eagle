@@ -17,7 +17,7 @@ services:
 
   kafkaeagle:
       build:
-        context: ~/kafka-eagle/.
+        context: .
       environment:
         KAFKA_EAGLE_CLUSTER_ZK_LIST: zookeeper:2181
       depends_on:
