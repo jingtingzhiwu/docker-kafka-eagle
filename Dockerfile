@@ -1,7 +1,7 @@
-FROM openjdk:8-buster
+FROM adoptopenjdk/openjdk8-openj9:alpine-slim
 
 ENV KE_HOME=/opt/kafka-eagle
-ENV EAGLE_VERSION=2.0.4
+ENV EAGLE_VERSION=2.0.5
 # Set config defaults
 ENV KAFKA_EAGLE_CLUSTER_ZK_LIST=zookeeper:2181
 ENV KAFKA_EAGLE_CLUSTER_KAFKA_EAGLE_BROKER_SIZE=1
@@ -19,17 +19,17 @@ ENV KAFKA_EAGLE_CLUSTER_KAFKA_EAGLE_SASL_MECHANISM=SCRAM-SHA-256
 ENV KAFKA_EAGLE_CLUSTER_KAFKA_EAGLE_SASL_JAAS_CONFIG='org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="admin-secret";'
 ENV KAFKA_EAGLE_CLUSTER_KAFKA_EAGLE_SASL_CGROUP_ENABLE=false
 ENV KAFKA_EAGLE_CLUSTER_KAFKA_EAGLE_SASL_CGROUP_TOPICS=kafka_ads01,kafka_ads02
-ENV KAFKA_EAGLE_DB_DRIVER=org.sqlite.JDBC
+ENV KAFKA_EAGLE_DB_DRIVER=com.mysql.jdbc.Driver
 ENV KAFKA_EAGLE_DB_USERNAME=root
-ENV KAFKA_EAGLE_DB_PASSWORD=smartloli
-ENV KAFKA_EAGLE_DB_URL=jdbc:sqlite:/hadoop/kafka-eagle/db/ke.db
+ENV KAFKA_EAGLE_DB_PASSWORD=root
+ENV KAFKA_EAGLE_DB_URL=jdbc:mysql://172.16.0.201:3306/kafka-eagle?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
 
 
 ADD system-config.properties /tmp
 ADD entrypoint.sh /usr/bin
 
-#RUN apk --update add wget gettext tar bash sqlite
-RUN apt-get update && apt-get install -y sqlite gettext
+RUN apk --update add wget gettext tar bash sqlite
+#RUN apt-get update && apt-get install -y sqlite gettext
 
 #get and unpack kafka eagle
 RUN mkdir -p /opt/kafka-eagle/conf;cd /opt && \
@@ -44,6 +44,4 @@ EXPOSE 8048 8080
 
 ENTRYPOINT ["entrypoint.sh"]
 
-WORKDIR /opt/kafka-eagle
-
-
+WORKDIR /opt/kafka-eagl
